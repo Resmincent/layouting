@@ -19,7 +19,9 @@ class DetailProduct extends StatelessWidget {
         ),
         backgroundColor: Colors.blueAccent,
       ),
-      floatingActionButton: const DialogCart(),
+      floatingActionButton: DialogCart(
+        product: product,
+      ),
       body: ListView(
         children: [
           DetailInformation(product: product),

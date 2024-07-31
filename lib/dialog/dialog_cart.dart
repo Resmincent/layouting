@@ -1,8 +1,12 @@
+import 'package:belajar_layouting/model/product_model.dart';
+import 'package:belajar_layouting/provider/cart_provider.dart';
 import 'package:belajar_layouting/screens/list_product.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DialogCart extends StatelessWidget {
-  const DialogCart({super.key});
+  final Product product;
+  const DialogCart({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,8 @@ class DialogCart extends StatelessWidget {
                 TextButton(
                     child: const Text('Confirm'),
                     onPressed: () {
+                      Provider.of<CartProvider>(context, listen: false)
+                          .addToCart(product);
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (context) => const ListProduct()),

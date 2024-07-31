@@ -1,6 +1,5 @@
-import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:belajar_layouting/provider/encrypt_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class EncryptFile extends StatefulWidget {
   const EncryptFile({super.key});
@@ -10,27 +9,7 @@ class EncryptFile extends StatefulWidget {
 }
 
 class _EncryptFileState extends State<EncryptFile> {
-  String ecryptedFile = "";
-  final key = encrypt.Key.fromUtf8('my 32 length key................');
-  final iv = encrypt.IV.fromLength(16);
-  late final encrypt.Encrypter encrypter;
-
-  @override
-  void initState() {
-    super.initState();
-    encrypter = encrypt.Encrypter(encrypt.AES(key));
-  }
-
-  Future<void> _encryptedFile(String assetPath) async {
-    final fileBytes = await rootBundle.load(assetPath);
-    final fileData = fileBytes.buffer.asUint8List();
-
-    final encrypted = encrypter.encryptBytes(fileData, iv: iv);
-
-    setState(() {
-      ecryptedFile = encrypted.base64;
-    });
-  }
+  final EncryptService encryptService = EncryptService();
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +21,9 @@ class _EncryptFileState extends State<EncryptFile> {
             SizedBox(
               width: 90,
               child: ElevatedButton(
-                onPressed: () {
-                  _encryptedFile('assets/files/Hallo.pdf');
+                onPressed: () async {
+                  await encryptService.encryptFile('assets/files/Hallo.pdf');
+                  setState(() {});
                 },
                 child: const Text(
                   "Encrypt File PDF",
@@ -55,8 +35,8 @@ class _EncryptFileState extends State<EncryptFile> {
             SizedBox(
               width: 90,
               child: ElevatedButton(
-                onPressed: () {
-                  _encryptedFile('assets/files/Hallo.docx');
+                onPressed: () async {
+                  await encryptService.encryptFile('assets/files/Hallo.docx');
                 },
                 child: const Text(
                   "Encrypt File Word",
@@ -68,8 +48,8 @@ class _EncryptFileState extends State<EncryptFile> {
             SizedBox(
               width: 90,
               child: ElevatedButton(
-                onPressed: () {
-                  _encryptedFile('assets/files/pr.xlsx');
+                onPressed: () async {
+                  await encryptService.encryptFile('assets/files/pr.xlsx');
                 },
                 child: const Text(
                   "Encrypt File Excel",
@@ -81,8 +61,8 @@ class _EncryptFileState extends State<EncryptFile> {
             SizedBox(
               width: 90,
               child: ElevatedButton(
-                onPressed: () {
-                  _encryptedFile('assets/images/tmli.jpeg');
+                onPressed: () async {
+                  await encryptService.encryptFile('assets/images/tmli.jpeg');
                 },
                 child: const Text(
                   "Encrypt File Image",
@@ -93,7 +73,7 @@ class _EncryptFileState extends State<EncryptFile> {
           ],
         ),
         Text(
-          ecryptedFile,
+          'Encrypt File:${encryptService.encryptedFile}',
           style: const TextStyle(fontSize: 12),
         )
       ],
